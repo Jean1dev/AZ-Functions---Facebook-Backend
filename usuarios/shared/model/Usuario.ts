@@ -1,18 +1,22 @@
 import * as Mongoose from 'mongoose';
 
 export interface IUsuario extends Mongoose.Document {
-  nome: string
-  photoUrl?: string
+  login: string
+  photoURL?: string
   displayName: string
   idAutenticacao: string
+  email?: string
 }
 
 const Usuario = new Mongoose.Schema({
-  nome: {
+  login: {
     type: String,
     required: true
   },
-  photoUrl: {
+  photoURL: {
+    type: String,
+  },
+  email: {
     type: String,
   },
   displayName: {

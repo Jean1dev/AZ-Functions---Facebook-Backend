@@ -1,7 +1,7 @@
 import * as DotEnv from 'dotenv'
 import { AzureFunction, Context, HttpRequest } from "@azure/functions"
 import UsuarioModel from '../shared/model/Usuario'
-import axios from 'axios'
+import axios from 'axios';
 import * as mongoose from 'mongoose'
 
 DotEnv.config()
@@ -17,24 +17,23 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
     const { login, password } = req.body
 
     try {
-        const { data } = await axios.post(`${process.env.BASE_URL_AUTH_SERVICE}/api/criar-usuario`, {
+        const { data: { token } } = await axios.post(`${process.env.BASE_URL_AUTH_SERVICE}/api/autenticar-via-login-password`, {
             login,
             password
         })
 
-        const usuario = new UsuarioModel({
-            login,
-            displayName: login,
-            idAutenticacao: data._id
-        })
-
-        const usuarioSave = await usuario.save()
+        const usuario = await UsuarioModel.findOne({ login })
         context.res = {
-            body: usuarioSave
+            body: {
+                usuario,
+                token
+            }
         }
     } catch (error) {
         context.log(error.message)
-        throw error
+        context.res = {
+            status: 404
+        }
     }
 };
 

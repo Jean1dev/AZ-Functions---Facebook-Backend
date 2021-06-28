@@ -13,6 +13,10 @@ export default async (context: Context, req: HttpRequest) => {
 
   const { data } = await axios.post(`${process.env.BASE_URL_AUTH_SERVICE}/api/validar-token-acesso`, {
     authorization: req.headers.authorization
+  }, {
+    params: {
+      code: process.env.AUTH_TOKEN
+    }
   })
 
   //@ts-ignore

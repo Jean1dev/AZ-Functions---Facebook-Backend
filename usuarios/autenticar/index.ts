@@ -20,6 +20,10 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
         const { data: { token } } = await axios.post(`${process.env.BASE_URL_AUTH_SERVICE}/api/autenticar-via-login-password`, {
             login,
             password
+        }, {
+            params: {
+                code: process.env.AUTENTICAR_TOKEN
+            }
         })
 
         const usuario = await UsuarioModel.findOne({ login })
